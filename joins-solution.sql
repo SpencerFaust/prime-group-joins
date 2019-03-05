@@ -5,8 +5,8 @@ JOIN "addresses" ON "addresses"."customer_id" = "customers"."id";
 
 --Question 2:
 SELECT * 
-FROM "addresses"
-JOIN "orders" ON "orders"."address_id" = "addresses"."id";
+FROM "orders"
+JOIN "line_items" ON "line_items"."order_id" = "orders"."id";
 
 -- Question 3:
 SELECT "description", "warehouse"
@@ -44,3 +44,29 @@ JOIN "warehouse_product" ON "warehouse_product"."product_id" = "products"."id"
 JOIN "warehouse" ON "warehouse"."id" = "warehouse_product"."warehouse_id"
 WHERE "description" = 'diet pepsi'
 GROUP BY "description";
+
+--STRETCH GOALS
+--Question 9:
+SELECT "orders"."order_date", SUM("products"."unit_price")
+FROM "orders"
+JOIN "line_items" ON "line_items"."order_id" = "orders"."id"
+JOIN "products" ON "products"."id" = "line_items"."product_id"
+GROUP BY "orders"."order_date";
+
+--Question 10:
+SELECT "first_name", SUM("unit_price")
+FROM "customers"
+JOIN "addresses" ON "addresses"."customer_id" = "customers"."id"
+JOIN "orders" ON "orders"."address_id" = "addresses"."id"
+JOIN "line_items" ON "line_items"."order_id" = "orders"."id"
+JOIN "products" ON "products"."id" = "line_items"."product_id"
+GROUP BY "first_name";
+
+--Question 11:
+SELECT "first_name", COALESCE(SUM("unit_price"), 0)
+FROM "customers"
+FULL OUTER JOIN "addresses" ON "addresses"."customer_id" = "customers"."id"
+FULL OUTER JOIN "orders" ON "orders"."address_id" = "addresses"."id"
+FULL OUTER JOIN "line_items" ON "line_items"."order_id" = "orders"."id"
+FULL OUTER JOIN "products" ON "products"."id" = "line_items"."product_id"
+GROUP BY "first_name";
